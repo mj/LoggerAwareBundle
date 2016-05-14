@@ -3,9 +3,8 @@
 namespace divbyzero\LoggerAwareBundle\Tests\DependencyInjection\Compiler;
 
 use divbyzero\LoggerAwareBundle\DependencyInjection\Compiler\LoggerInjectionCompilerPass;
-use divbyzero\LoggerAwareBundle\LoggerAwareInterface;
-use divbyzero\LoggerAwareBundle\LoggerAwareTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Psr\Log\LoggerInterface;
 
@@ -25,7 +24,12 @@ class InterfaceStub implements LoggerAwareInterface
 }
 
 class TraitStub {
-    use LoggerAwareTrait { getLogger as public; }
+    use LoggerAwareTrait;
+
+    public function getLogger()
+    {
+        return $this->logger;
+    }
 }
 
 class LoggerInjectionCompilerPassTest extends \PHPUnit_Framework_TestCase
@@ -50,7 +54,7 @@ class LoggerInjectionCompilerPassTest extends \PHPUnit_Framework_TestCase
     public function testServiceWithInterface2()
     {
         $container = new ContainerBuilder();
-        
+
         $mock = $this->getMock('Psr\Log\LoggerInterface');
         $container->register('logger')->setClass(get_class($mock));
 
@@ -63,10 +67,10 @@ class LoggerInjectionCompilerPassTest extends \PHPUnit_Framework_TestCase
     public function testServiceWithTrait1()
     {
         $container = new ContainerBuilder();
-        
+
         $mock = $this->getMock('Psr\Log\LoggerInterface');
         $container->register('logger')->setClass(get_class($mock));
-        
+
         $container->register('a')->setClass('divbyzero\LoggerAwareBundle\Tests\DependencyInjection\Compiler\TraitStub');
 
         $obj = $this->process($container, 'a');

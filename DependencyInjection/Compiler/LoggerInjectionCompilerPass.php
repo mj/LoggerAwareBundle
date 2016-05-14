@@ -19,15 +19,14 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
  * Symfony compiler pass for injecting the logger service
  *
  * This compiler pass injects the logger service into all registered
- * services that either implement LoggerAwareInterface or that use
- * the LoggerAwareTrait trait.
+ * services that either implement the PSR-3 LoggerAwareInterface or that use.
+ * the PSR-3 LoggerAwareTrait.
  *
  * @author Martin Jansen <martin@divbyzero.net>
  */
 class LoggerInjectionCompilerPass implements CompilerPassInterface
 {
     private static $serviceIdentifier = 'logger';
-    private static $baseNS = 'divbyzero\LoggerAwareBundle';
 
     public function process(ContainerBuilder $container)
     {
@@ -46,8 +45,8 @@ class LoggerInjectionCompilerPass implements CompilerPassInterface
 
             $class = $definition->getClass();
             
-            $aware = in_array(self::$baseNS . '\LoggerAwareInterface', class_implements($class))
-                || in_array(self::$baseNS . '\LoggerAwareTrait', class_uses($class));
+            $aware = in_array('Psr\Log\LoggerAwareInterface', class_implements($class))
+                || in_array('Psr\Log\LoggerAwareTrait', class_uses($class));
 
             if (!$aware) {
                 continue;
