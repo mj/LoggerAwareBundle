@@ -42,6 +42,9 @@ class LoggerInjectionCompilerPassTest extends \PHPUnit_Framework_TestCase
         return $container->get($serviceId);
     }
 
+    /**
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     */
     public function testServiceWithInterface1()
     {
         $container = new ContainerBuilder();
