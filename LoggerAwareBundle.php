@@ -10,6 +10,7 @@
 
 namespace divbyzero\LoggerAwareBundle;
 
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use divbyzero\LoggerAwareBundle\DependencyInjection\Compiler\LoggerInjectionCompilerPass;
@@ -24,6 +25,9 @@ class LoggerAwareBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new LoggerInjectionCompilerPass());
+        $container->addCompilerPass(
+            new LoggerInjectionCompilerPass(),
+            PassConfig::TYPE_BEFORE_REMOVING
+        );
     }
 }
