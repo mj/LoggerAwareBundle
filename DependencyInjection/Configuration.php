@@ -28,6 +28,15 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('logger_aware');
 
+        $rootNode
+            ->children()
+                ->scalarNode('logger_service')
+                    ->info('This value determines the logger service to be injected.')
+                    ->defaultValue('logger')
+                ->end()
+            ->end()
+        ;
+
         return $treeBuilder;
     }
 }
